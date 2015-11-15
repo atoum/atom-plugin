@@ -1,0 +1,20 @@
+# See https://atom.io/docs/latest/hacking-atom-package-word-count#menus for more details
+'context-menu':
+    '.entries > li.directory': [
+        { 'label': 'Run directory with atoum', 'command': 'atoum-plugin:run-directory' }
+    ]
+    '.entries > li.file': [
+        { 'label': 'Run file with atoum', 'command': 'atoum-plugin:run-file' }
+    ]
+
+'menu': [
+    {
+        'label': 'Packages'
+        'submenu': [
+            'label': 'atoum'
+            'submenu': [
+                { 'label': 'Toggle panel', 'command': 'atoum-plugin:toggle' }
+            ]
+        ]
+    }
+]

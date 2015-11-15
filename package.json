@@ -1,0 +1,25 @@
+{
+  "name": "atoum-plugin",
+  "main": "./lib/plugin",
+  "version": "0.1.0",
+  "description": "atoum integration: run your PHP unit tests and get feedback right in Atom editor",
+  "keywords": [],
+  "activationCommands": {
+    "atom-workspace": [
+      "atoum-plugin:toggle",
+      "atoum-plugin:run-directory",
+      "atoum-plugin:run-file"
+    ]
+  },
+  "repository": "https://github.com/atoum/atom-plugin",
+  "license": "BSD",
+  "engines": {
+    "atom": "*"
+  },
+  "dependencies": {
+    "atom-space-pen-views": "^2.1.0"
+  },
+  "devDependencies": {
+    "coffeelint": "^1.13.1"
+  }
+}

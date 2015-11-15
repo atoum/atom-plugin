@@ -1,0 +1,139 @@
+@import "ui-variables";
+
+@panel-height: 400px;
+@toolbar-width: 16px;
+@report-tree-width: 400px;
+
+.atoum {
+    height: @panel-height;
+
+    .panel-heading {
+        .subtle-info-message {
+            padding-left: @component-padding / 2;
+            color: @text-color-subtle;
+
+            .highlight {
+                color: @text-color;
+                font-weight: normal;
+            }
+        }
+
+        progress {
+            margin-top: -@component-padding / 4;
+
+            &::-webkit-progress-value {
+                background: @background-color-success;
+            }
+
+            &.progress-error::-webkit-progress-value {
+                background: @background-color-error;
+            }
+
+            &.progress-warning::-webkit-progress-value {
+                background: @background-color-warning;
+            }
+
+            &.progress-info::-webkit-progress-value {
+                background: @background-color-info;
+            }
+        }
+    }
+
+    .panel-body {
+        display: flex;
+        flex-direction: row;
+
+        .toolbar {
+            flex: 1 1 @toolbar-width;
+
+            a {
+                display: block;
+                width: 16px;
+                height: 16px;
+                text-align: center;
+            }
+
+            a + a {
+                margin-top: @component-padding / 2;
+            }
+        }
+
+        .console, .report {
+            flex: 100 1 @toolbar-width;
+        }
+    }
+
+    .console {
+        background-color: @inset-panel-background-color;
+        border: 1px solid @inset-panel-border-color;
+        border-radius: @component-border-radius;
+        height: @panel-height - (@component-padding * 5);
+        overflow-y: auto;
+
+        pre {
+            font-family: monospace;
+            font-weight: normal;
+            font-size: 1.2em;
+            color: @text-color;
+        }
+    }
+
+    .report {
+        height: @panel-height - (@component-padding * 5);
+        display: flex;
+        flex-direction: row;
+
+        .tree-view {
+            border-radius: @component-border-radius 0 0 @component-border-radius;
+            padding: 0 @component-padding 0 @component-icon-padding;
+            margin: 0;
+            list-style-type: none;
+            flex: 1 1 @report-tree-width;
+            width: @report-tree-width;
+            max-width: @report-tree-width;
+            overflow: auto;
+            border: 1px solid @inset-panel-border-color;
+
+            .header {
+                position: relative;
+            }
+
+            li {
+                white-space: nowrap;
+                max-width: @report-tree-width;
+            }
+        }
+
+        .tree-view + div {
+            position: relative;
+            border-radius: 0 @component-border-radius @component-border-radius 0;
+            flex: 100 1 @report-tree-width;
+            background-color: @inset-panel-background-color;
+            border: 1px solid @inset-panel-border-color;
+            border-left: 0;
+        }
+    }
+}
+
+atom-text-editor::shadow {
+    .failing {
+        &.decoration {
+            left: 0;
+            right: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            span {
+                height: 0.5em !important;
+                width: 0.5em;
+                border-radius: 50%;
+                background-color: @text-color-error;
+            }
+        }
+
+        .region {
+            border-bottom: 1px dashed @text-color-error;
+        }
+    }
+}
