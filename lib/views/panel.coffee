@@ -1,7 +1,7 @@
 process = require 'child_process'
 
 { CompositeDisposable } = require 'atom'
-{ View, $ } = require 'atom-space-pen-views'
+{ View } = require 'atom-space-pen-views'
 AtoumToolbarView = require './toolbar'
 AtoumConsoleView = require './console'
 AtoumReportView = require './report'

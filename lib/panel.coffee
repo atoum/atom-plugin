@@ -1,3 +1,4 @@
+path = require 'path'
 { CompositeDisposable } = require 'atom'
 AtoumPanelView = require './views/panel'
 AtoumRunner = require './runner'
@@ -14,19 +15,36 @@ class AtoumPanel
     constructor: (state = {}) ->
         @subscriptions = new CompositeDisposable
         @parser = new AtoumParser
-        @runner = new AtoumRunner @parser
-        @notifier = new AtoumNotifier @runner, @parser
+        @runner = new AtoumRunner
+        @notifier = new AtoumNotifier
         @view = new AtoumPanelView state, @runner, @parser
         @decorator = new AtomDecorator @parser
 
+        @subscriptions.add @runner.on 'start', => @parser.reset()
+        @subscriptions.add @runner.on 'start', => @notifier.reset()
+        @subscriptions.add @runner.on 'start', => @decorator.reset()
+        @subscriptions.add @runner.on 'output', (data) => @parser.parse data
+        @subscriptions.add @runner.on 'stop', => @parser.flush()
+        @subscriptions.add @runner.on 'stop', (code) => @notifier.notify code
+
+        @subscriptions.add @parser.on 'test', (test) => @notifier.addTest test
+        @subscriptions.add @parser.on 'test', (test) => @decorator.addTest test
+
         @subscriptions.add @notifier.on 'dismiss', => @show()
+
+        @subscriptions.add atom.commands.add 'atom-workspace',
+            'atoum-plugin:run-directory': ({ target }) => @runner.start target
+            'atoum-plugin:run-file': ({ target }) => @runner.start target
+        @subscriptions.add atom.commands.add 'atom-text-editor',
+            'atoum-plugin:run-current-file': => @runner.start atom.workspace.getActiveTextEditor().getPath()
+            'atoum-plugin:run-current-directory': => @runner.start path.dirname atom.workspace.getActiveTextEditor().getPath()
+        @subscriptions.add atom.workspace.onDidOpen (event) =>
+            @decorator.decorate event.item, event.uri
 
     destroy: ->
         @subscriptions.dispose()
-        @runner.destroy()
         @notifier.destroy()
         @view.destroy()
-        @decorator.destroy()
 
     addToWorkspace: (workspace) ->
         @panel = workspace.addBottomPanel

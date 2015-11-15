@@ -8,10 +8,10 @@ describe 'AtoumToolbarView', ->
         view = new AtoumToolbarView {}
 
     it 'has a start/stop button', ->
-        expect(view.startStopButton).toNotBe undefined
+        expect(view.startStopButton).not.toBe undefined
 
     it 'has a view switch button', ->
-        expect(view.viewButton).toNotBe undefined
+        expect(view.viewButton).not.toBe undefined
 
     describe 'When a model is provided with console view', ->
         beforeEach ->

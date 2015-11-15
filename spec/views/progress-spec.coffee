@@ -7,7 +7,7 @@ describe 'AtoumProgressView', ->
         view = new AtomProgressView
 
     it 'has a progress bar', ->
-        expect(view.bar.is('progress')).toBe true
+        expect(view.bar).not.toBe undefined
 
     it 'initializes with an empty bar', ->
         expect(view.bar.attr('max')).toBe undefined

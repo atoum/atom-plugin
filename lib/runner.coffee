@@ -1,11 +1,11 @@
 fs = require 'fs'
 path = require 'path'
 { $ } = require 'atom-space-pen-views'
-{ BufferedProcess, Emitter, CompositeDisposable } = require 'atom'
+{ BufferedProcess, Emitter } = require 'atom'
 
 module.exports =
 class AtoumRunner extends Emitter
-    constructor: (@parser) ->
+    constructor: ->
         super()
 
         @path = atom.packages.resolvePackagePath('atom-plugin') + '/resources/atoum.phar'
@@ -19,22 +19,16 @@ class AtoumRunner extends Emitter
             if fs.existsSync path + '/vendor/atoum/atoum/bin/atoum'
                 @path = path + '/vendor/atoum/atoum/bin/atoum'
 
-        @subscriptions = new CompositeDisposable
-        @subscriptions.add atom.commands.add 'atom-workspace',
-            'atoum-plugin:run-directory': ({ target }) => @start(target)
-            'atoum-plugin:run-file': ({ target }) => @start(target)
-
-    destroy: ->
-        @subscriptions.dispose()
-
     start: (target = null) ->
         out = (data) => @emit 'output', data
 
-        if target
+        if target instanceof HTMLElement
             unless $(target).is('span')
                 target = $(target).find('span')
 
             @target = $(target).attr('data-path')
+        else
+            @target = target if target
 
         return unless @target
 
@@ -49,21 +43,16 @@ class AtoumRunner extends Emitter
         args.push @target
 
         @running = true
-        @parser.reset()
         @emit 'start'
         out 'php ' + args.join(' ') + '\n'
-        console.log 'php ' + args.join(' ') + '\n'
         out 'in ' + cwd
-        console.log 'in ' + cwd
 
         @process = new BufferedProcess
             command: 'php'
             args: args
             options:
                 cwd: cwd + '/../..'
-            stdout: (data) =>
-                @parser.parse data
-                out data
+            stdout: out
             stderr: (data) =>
                 @emit 'error', data
             exit: (code) =>
@@ -74,6 +63,5 @@ class AtoumRunner extends Emitter
         @didExit()
 
     didExit: (code = -1) ->
-        @parser.flush()
         @running = false
         @emit 'stop', code

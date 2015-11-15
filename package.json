@@ -8,7 +8,9 @@
     "atom-workspace": [
       "atoum-plugin:toggle",
       "atoum-plugin:run-directory",
-      "atoum-plugin:run-file"
+      "atoum-plugin:run-file",
+      "atoum-plugin:run-current-directory",
+      "atoum-plugin:run-current-file"
     ]
   },
   "repository": "https://github.com/atoum/atom-plugin",
