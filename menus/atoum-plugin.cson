@@ -6,6 +6,9 @@
     '.entries > li.file': [
         { 'label': 'Run file with atoum', 'command': 'atoum-plugin:run-file' }
     ]
+    'atom-text-editor[data-grammar*=php]': [
+        { 'label': 'Run file with atoum', 'command': 'atoum-plugin:run-current-file' }
+    ]
 
 'menu': [
     {
