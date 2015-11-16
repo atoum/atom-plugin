@@ -1,6 +1,6 @@
 'atom-workspace':
     'ctrl-alt-a': 'atoum-plugin:toggle'
 
-'atom-text-editor':
+'atom-text-editor[data-grammar*=php]':
     'cmd-ctrl-alt-a': 'atoum-plugin:run-current-file'
     'cmd-ctrl-alt-shift-a': 'atoum-plugin:run-current-directory'
