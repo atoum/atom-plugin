@@ -68,10 +68,10 @@ class AtoumPanelView extends View
         @toggleView()
 
     toggleView: ->
-        if @model.view is 'console' or not @model.view
+        if @model.view is 'console'
             @showConsole()
 
-        if @model.view is 'report'
+        if @model.view is 'report' or not @model.view
             @showReport()
 
     showConsole: ->

@@ -1,5 +1,6 @@
 ## 0.3.0
 
+* Use the graphical report as the default view
 * Readme
 
 ## 0.2.0
