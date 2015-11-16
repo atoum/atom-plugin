@@ -10,8 +10,8 @@ describe 'AtoumConfigurator', ->
     beforeEach ->
         @addMatchers
             toHaveArgumentsInThisOrder: (args...) ->
-                lastIndex = -1;
-                matched = 0;
+                lastIndex = -1
+                matched = 0
 
                 for expected in args
                     if (lastIndex is -1 and @actual.indexOf(expected) > lastIndex) or (@actual.indexOf(expected) is lastIndex + 1)
