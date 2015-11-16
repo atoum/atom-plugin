@@ -28,3 +28,5 @@
 | `atoum-plugin.xdebugConfig`        | xDebug configuration                                                                                                                                | ` `                            |
 | `atoum-plugin.failIfVoidMethod`    | Fail if there is a void method                                                                                                                      | `false`                        |
 | `atoum-plugin.failIfSkippedMethod` | Fail if there is a skipped method                                                                                                                   | `false`                        |
+| `atoum-plugin.phpPath`             | Path to the PHP binary to use                                                                                                                       | `php`                          |
+| `atoum-plugin.phpArguments`        | Arguments to append to the PHP command                                                                                                              | ` `                            |

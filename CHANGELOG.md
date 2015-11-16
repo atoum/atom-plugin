@@ -1,5 +1,6 @@
 ## 0.3.0
 
+* Configuration for PHP oath and arguments
 * Context menu entry in the editor to run current file
 * Use the graphical report as the default view
 * Readme

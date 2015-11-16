@@ -29,19 +29,17 @@ class AtoumRunner extends Emitter
         @running = true
         @emit 'start'
         args = @configurator.getArguments @target
-        out 'php ' + args.join(' ') + '\n'
+        out @config.phpPath + ' \'' + args.join('\' \'') + '\'\n'
         out 'in ' + cwd
 
         @process = new BufferedProcess
-            command: 'php'
+            command: @config.phpPath
             args: args
             options:
                 cwd: cwd
             stdout: out
-            stderr: (data) =>
-                @emit 'error', data
-            exit: (code) =>
-                @didExit code
+            stderr: (data) => @emit 'error', data
+            exit: (code) => @didExit code
 
     stop: ->
         @process?.kill()

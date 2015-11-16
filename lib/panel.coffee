@@ -28,7 +28,9 @@ class AtoumPanel
             @parser.reset()
             @notifier.reset()
             @decorator.reset()
+
         @subscriptions.add @runner.on 'output', (data) => @parser.parse data
+
         @subscriptions.add @runner.on 'stop', (code) =>
             @parser.flush()
             @notifier.notify code
@@ -42,11 +44,13 @@ class AtoumPanel
         @subscriptions.add atom.commands.add 'atom-workspace',
             'atoum-plugin:run-directory': ({ target }) => @runner.start target
             'atoum-plugin:run-file': ({ target }) => @runner.start target
+
         @subscriptions.add atom.commands.add 'atom-text-editor',
             'atoum-plugin:run-current-file': => @runner.start atom.workspace.getActiveTextEditor().getPath()
             'atoum-plugin:run-current-directory': => @runner.start path.dirname atom.workspace.getActiveTextEditor().getPath()
 
         @subscriptions.add @notifier
+
         @subscriptions.add @view
 
     destroy: ->
