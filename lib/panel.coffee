@@ -20,15 +20,18 @@ class AtoumPanel
         @view = new AtoumPanelView state, @runner, @parser
         @decorator = new AtomDecorator @parser
 
-        @subscriptions.add @runner.on 'start', => @parser.reset()
-        @subscriptions.add @runner.on 'start', => @notifier.reset()
-        @subscriptions.add @runner.on 'start', => @decorator.reset()
+        @subscriptions.add @runner.on 'start', =>
+            @parser.reset()
+            @notifier.reset()
+            @decorator.reset()
         @subscriptions.add @runner.on 'output', (data) => @parser.parse data
-        @subscriptions.add @runner.on 'stop', => @parser.flush()
-        @subscriptions.add @runner.on 'stop', (code) => @notifier.notify code
+        @subscriptions.add @runner.on 'stop', (code) =>
+            @parser.flush()
+            @notifier.notify code
 
-        @subscriptions.add @parser.on 'test', (test) => @notifier.addTest test
-        @subscriptions.add @parser.on 'test', (test) => @decorator.addTest test
+        @subscriptions.add @parser.on 'test', (test) =>
+            @notifier.addTest test
+            @decorator.addTest test
 
         @subscriptions.add @notifier.on 'dismiss', => @show()
 
@@ -41,10 +44,11 @@ class AtoumPanel
         @subscriptions.add atom.workspace.onDidOpen (event) =>
             @decorator.decorate event.item, event.uri
 
+        @subscriptions.add @notifier
+        @subscriptions.add @view
+
     destroy: ->
         @subscriptions.dispose()
-        @notifier.destroy()
-        @view.destroy()
 
     addToWorkspace: (workspace) ->
         @panel = workspace.addBottomPanel

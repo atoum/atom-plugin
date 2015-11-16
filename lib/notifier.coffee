@@ -9,7 +9,7 @@ class AtoumNotifier extends Emitter
 
         @enable()
 
-    destroy: ->
+    dispose: ->
         @subscriptions.dispose()
 
     reset: ->

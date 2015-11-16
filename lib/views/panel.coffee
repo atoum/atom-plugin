@@ -52,10 +52,11 @@ class AtoumPanelView extends View
             @progress.testHasBeenSkipped() if test.status is 'skip'
             @progress.testIsVoid() if test.status is 'void'
 
-    destroy: ->
+        @subscriptions.add @toolbar
+        @subscriptions.add @report
+
+    dispose: ->
         @subscriptions.dispose()
-        @toolbar.destroy()
-        @report.destroy()
 
     setPanel: (@panel) ->
         @subscriptions.add @panel.onDidChangeVisible (visible) =>

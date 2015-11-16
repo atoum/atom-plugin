@@ -17,7 +17,7 @@ class AtoumReportView extends View
     initialize: ->
         @subscriptions = new CompositeDisposable
 
-    destroy: ->
+    dispose: ->
         @subscriptions.dispose()
 
     setRunner: (@runner) ->

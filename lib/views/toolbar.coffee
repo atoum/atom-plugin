@@ -14,7 +14,7 @@ class AtoumToolbarView extends View
         @emitter = new Emitter
         @displayView()
 
-    destroy: ->
+    dispose: ->
         @subscriptions?.dispose()
         @emitter.dispose()
 
@@ -23,7 +23,7 @@ class AtoumToolbarView extends View
 
     setRunner: (@runner) ->
         @subscriptions?.dispose()
-        
+
         if @runner.running
             @runnerDidStart()
         else
