@@ -5,6 +5,8 @@ AtoumRunner = require './runner'
 AtoumNotifier = require './notifier'
 AtoumParser = require './parser'
 AtomDecorator = require './decorator'
+AtoumLocator = require './locator'
+AtoumConfigurator = require './configurator'
 
 module.exports =
 class AtoumPanel
@@ -15,7 +17,9 @@ class AtoumPanel
     constructor: (state = {}) ->
         @subscriptions = new CompositeDisposable
         @parser = new AtoumParser
-        @runner = new AtoumRunner
+        @locator = new AtoumLocator atom.packages.getLoadedPackage('atoum-plugin'), atom.project
+        @configurator = new AtoumConfigurator @locator
+        @runner = new AtoumRunner @configurator
         @notifier = new AtoumNotifier
         @view = new AtoumPanelView state, @runner, @parser
         @decorator = new AtomDecorator @parser
@@ -41,8 +45,6 @@ class AtoumPanel
         @subscriptions.add atom.commands.add 'atom-text-editor',
             'atoum-plugin:run-current-file': => @runner.start atom.workspace.getActiveTextEditor().getPath()
             'atoum-plugin:run-current-directory': => @runner.start path.dirname atom.workspace.getActiveTextEditor().getPath()
-        @subscriptions.add atom.workspace.onDidOpen (event) =>
-            @decorator.decorate event.item, event.uri
 
         @subscriptions.add @notifier
         @subscriptions.add @view
@@ -56,6 +58,14 @@ class AtoumPanel
             visible: false,
             className: 'tool-panel panel-bottom'
         @view.setPanel @panel
+
+        @subscriptions.add atom.workspace.onDidOpen (event) =>
+            @decorator.decorate event.item, event.uri
+
+    configChanged: (@config) ->
+        @runner.configChanged @config
+        @configurator.configChanged @config
+        @locator.configChanged @config
 
     show: ->
         unless @panel?.isVisible()

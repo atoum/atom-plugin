@@ -58,7 +58,6 @@ class AtoumParser extends Emitter
                 else
                     matches = line.match(/^# (.+?)(?:\:(\d+))?$/)
                     if matches
-                        console.log matches
                         if fs.existsSync(matches[1])
                             @test.file = matches[1]
                             @test.line = matches[2]
