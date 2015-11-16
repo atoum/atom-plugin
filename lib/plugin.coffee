@@ -6,11 +6,11 @@ module.exports =
         usePackagedPhar:
             type: 'boolean'
             default: false
-            description: 'Use the packaged atoum PHAR.'
+            description: 'Use the packaged atoum PHAR'
         maxChildrenNumber:
             type: 'integer'
             default: require('os').cpus().length
-            description: 'Number of concurrent process'
+            description: 'Maximum number of concurrent processes'
         disableCodeCoverage:
             type: 'boolean'
             default: true
