@@ -1,7 +1,7 @@
 {
   "name": "atoum-plugin",
   "main": "./lib/plugin",
-  "version": "0.1.0",
+  "version": "0.0.0",
   "description": "atoum integration: run your PHP unit tests and get feedback right in Atom editor",
   "keywords": [],
   "activationCommands": {
