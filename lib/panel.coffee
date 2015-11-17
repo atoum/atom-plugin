@@ -20,7 +20,7 @@ class AtoumPanel
         @locator = new AtoumLocator atom.packages.getLoadedPackage('atoum-plugin'), atom.project
         @configurator = new AtoumConfigurator @locator
         @runner = new AtoumRunner @configurator
-        @notifier = new AtoumNotifier
+        @notifier = new AtoumNotifier atom.notifications
         @view = new AtoumPanelView state, @runner, @parser
         @decorator = new AtomDecorator @parser
 
@@ -33,10 +33,10 @@ class AtoumPanel
 
         @subscriptions.add @runner.on 'stop', (code) =>
             @parser.flush()
-            @notifier.notify code
+            @notifier.runnerDidStop code
 
         @subscriptions.add @parser.on 'test', (test) =>
-            @notifier.addTest test
+            @notifier.testDidFinish test.status
             @decorator.addTest test
 
         @subscriptions.add @notifier.on 'dismiss', => @show()

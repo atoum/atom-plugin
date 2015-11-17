@@ -1,3 +1,7 @@
+## 0.4.0
+
+* Automatically dismiss outdated notifications
+
 ## 0.3.0
 
 * Configuration for PHP path and arguments

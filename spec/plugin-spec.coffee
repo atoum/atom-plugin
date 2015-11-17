@@ -23,7 +23,7 @@ describe "AtoumPlugin", ->
             runs ->
                 atomPluginElement = workspaceElement.querySelector('.atoum')
                 expect(atomPluginElement).toExist()
-                
+
                 atomPluginPanel = atom.workspace.getBottomPanels()[0]
                 expect(atomPluginPanel.isVisible()).toBe true
                 atom.commands.dispatch workspaceElement, 'atoum-plugin:toggle'
