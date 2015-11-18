@@ -8,7 +8,11 @@ class AtoumConfigurator
     configChanged: (@config) ->
 
     getArguments: (target = null) ->
-        args = [@locator.getBinary(), '-utr', '+verbose']
+        binary = @locator.getBinary()
+
+        return false if not binary
+
+        args = [binary, '-utr', '+verbose']
 
         args = args.concat ['-mcn', @config.maxChildrenNumber] if @config?.maxChildrenNumber
         args.push '-ncc' if @config?.disableCodeCoverage

@@ -34,7 +34,7 @@ class AtoumNotifier extends Emitter
         @voidNumber += 1 if status is 'void'
 
     runnerDidStop: (code) ->
-        return unless @enabled and @count > 0
+        return unless @enabled and (@count > 0 or code > 0)
 
         if code is 0 and @skip is 0 and @voidNumber is 0
             @notification = @notifications.addSuccess 'Tests passed',

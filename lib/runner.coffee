@@ -29,17 +29,22 @@ class AtoumRunner extends Emitter
         @running = true
         @emit 'start'
         args = @configurator.getArguments @target
-        out @config.phpPath + ' \'' + args.join('\' \'') + '\'\n'
-        out 'in ' + cwd
 
-        @process = new BufferedProcess
-            command: @config.phpPath
-            args: args
-            options:
-                cwd: cwd
-            stdout: out
-            stderr: (data) => @emit 'error', data
-            exit: (code) => @didExit code
+        if not args
+            @emit 'error', 'Could not find atoum binary'
+            @didExit 255
+        else
+            out @config.phpPath + ' \'' + args.join('\' \'') + '\'\n'
+            out 'in ' + cwd
+
+            @process = new BufferedProcess
+                command: @config.phpPath
+                args: args
+                options:
+                    cwd: cwd
+                stdout: out
+                stderr: (data) => @emit 'error', data
+                exit: (code) => @didExit code
 
     stop: ->
         @process?.kill()

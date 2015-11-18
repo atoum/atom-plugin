@@ -1,8 +1,8 @@
-fs = require 'fs'
 path = require 'path'
+AtoumGlob = require('../lib/glob')
 AtoumLocator = require '../lib/locator'
 
-describe 'AtoumConfigurator', ->
+describe 'AtoumLocator', ->
     project = null
     pkg = null
     locator = null
@@ -12,31 +12,27 @@ describe 'AtoumConfigurator', ->
             path: '/path/to/project'
         project =
             getPaths: ->
-                ['/path/to/project', '/path/to/somewhere/else']
+                ['/path/to/project', '/path/to/somewhere/else', '/path/to/nowhere']
         locator = new AtoumLocator pkg, project
 
     it 'should search atoum binary in project paths', ->
-        spyOn(fs, 'existsSync').andCallThrough()
+        spyOn(AtoumGlob, 'readdirSync').andCallFake -> []
 
         expect(locator.getBinary()).toBe false
 
         for dir in project.getPaths()
-            expect(fs.existsSync).toHaveBeenCalledWith path.join(dir, 'bin', 'atoum')
-            expect(fs.existsSync).toHaveBeenCalledWith path.join(dir, 'vendor', 'bin', 'atoum')
-            expect(fs.existsSync).toHaveBeenCalledWith path.join(dir, 'vendor', 'atoum', 'atoum', 'bin', 'atoum')
+            expect(AtoumGlob.readdirSync).toHaveBeenCalledWith path.join(dir, '**', 'bin', 'atoum')
 
     it 'should return the first available path', ->
-        spyOn(fs, 'existsSync').andCallFake ->
-            fs.existsSync.callCount > 1
+        spyOn(AtoumGlob, 'readdirSync').andCallFake ->
+            return [path.join(project.getPaths()[0], 'vendor', 'bin', 'atoum').replace('/', '')] if AtoumGlob.readdirSync.callCount > 1
+            return []
 
         expect(locator.getBinary()).toBe path.join(project.getPaths()[0], 'vendor', 'bin', 'atoum')
 
-        expect(fs.existsSync).toHaveBeenCalledWith path.join(project.getPaths()[0], 'bin', 'atoum')
-        expect(fs.existsSync).toHaveBeenCalledWith path.join(project.getPaths()[0], 'vendor', 'bin', 'atoum')
-        expect(fs.existsSync).not.toHaveBeenCalledWith path.join(project.getPaths()[0], 'vendor', 'atoum', 'atoum', 'bin', 'atoum')
-        expect(fs.existsSync).not.toHaveBeenCalledWith path.join(project.getPaths()[1], 'bin', 'atoum')
-        expect(fs.existsSync).not.toHaveBeenCalledWith path.join(project.getPaths()[1], 'vendor', 'bin', 'atoum')
-        expect(fs.existsSync).not.toHaveBeenCalledWith path.join(project.getPaths()[1], 'vendor', 'atoum', 'atoum', 'bin', 'atoum')
+        expect(AtoumGlob.readdirSync).toHaveBeenCalledWith path.join(project.getPaths()[0], '**', 'bin', 'atoum')
+        expect(AtoumGlob.readdirSync).toHaveBeenCalledWith path.join(project.getPaths()[1], '**', 'bin', 'atoum')
+        expect(AtoumGlob.readdirSync).not.toHaveBeenCalledWith path.join(project.getPaths()[2], '**', 'bin', 'atoum')
 
     describe 'When a configuration is provided', ->
         it 'should use packaged phar', ->

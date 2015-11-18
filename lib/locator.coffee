@@ -1,14 +1,9 @@
 path = require 'path'
-fs = require 'fs'
+AtoumGlob = require './glob'
 
 module.exports =
 class AtoumLocator
     constructor: (@package, @project) ->
-        @paths = [
-            path.join 'bin', 'atoum'
-            path.join 'vendor', 'bin', 'atoum'
-            path.join 'vendor', 'atoum', 'atoum', 'bin', 'atoum'
-        ]
 
     configChanged: (@config) ->
 
@@ -18,7 +13,11 @@ class AtoumLocator
         return unless @project
 
         for dir in @project.getPaths()
-            for entry in @paths
-                return path.join(dir, entry) if fs.existsSync path.join(dir, entry)
+            try
+                files = AtoumGlob.readdirSync path.join dir, '**', 'bin', 'atoum'
+            catch error
+                files = []
+
+            return path.sep + files[0] if files.length > 0
 
         false

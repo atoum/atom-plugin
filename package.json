@@ -19,7 +19,8 @@
     "atom": "*"
   },
   "dependencies": {
-    "atom-space-pen-views": "^2.1.0"
+    "atom-space-pen-views": "^2.1.0",
+    "glob-fs": "^0.1.6"
   },
   "devDependencies": {
     "coffeelint": "^1.13.1"
