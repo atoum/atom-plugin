@@ -5,6 +5,12 @@ class AtoumDecorator
     constructor: ->
         @reset()
 
+    dispose: ->
+        @reset()
+
+    runnerDidStart: ->
+        @reset()
+
     reset: ->
         @subscriptions?.dispose()
 
@@ -17,7 +23,7 @@ class AtoumDecorator
     findLineEnd: (line) ->
         line.replace(/\s*$/g, '').length
 
-    addTest: (test) ->
+    testDidFinish: (test) ->
         return if test.status is 'ok'
 
         @markers[test.file] = [] unless @markers[test.file]

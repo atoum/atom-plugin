@@ -6,24 +6,21 @@ class AtoumConsoleView extends View
         @div class: 'console', =>
             @pre outlet: 'content', ''
 
-    setRunner: (@runner) ->
+    runnerDidStart: ->
         @reset()
 
-        @runner.on 'start', =>
-            @reset()
+    runnerDidStop: ->
+        @scroll()
 
-        @runner.on 'output', (data) =>
-            return if data.toString().replace(/\s/g, '') is ''
+    runnerDidProduceOutput: (data) ->
+        return if data.toString().replace(/\s/g, '') is ''
 
-            @write data.toString()
+        @write data.toString()
 
-        @runner.on 'error', (data) =>
-            return if data.toString().replace(/\s/g, '') is ''
+    runnerDidProduceError: (data) ->
+        return if data.toString().replace(/\s/g, '') is ''
 
-            @write data.toString()
-
-        @runner.on 'stop', =>
-            @scroll()
+        @write data.toString()
 
     reset: ->
         @content.html ''

@@ -1,5 +1,6 @@
 path = require 'path'
 { CompositeDisposable } = require 'atom'
+{ $ } = require 'atom-space-pen-views'
 AtoumPanelView = require './views/panel'
 AtoumRunner = require './runner'
 AtoumNotifier = require './notifier'
@@ -21,37 +22,53 @@ class AtoumPanel
         @configurator = new AtoumConfigurator @locator
         @runner = new AtoumRunner @configurator
         @notifier = new AtoumNotifier atom.notifications
-        @view = new AtoumPanelView state, @runner, @parser
-        @decorator = new AtomDecorator @parser
+        @view = new AtoumPanelView state, @runner
+        @decorator = new AtomDecorator
 
         @subscriptions.add @runner.on 'start', =>
-            @parser.reset()
-            @notifier.reset()
-            @decorator.reset()
+            @parser.runnerDidStart()
+            @notifier.runnerDidStart()
+            @decorator.runnerDidStart()
+            @view.runnerDidStart()
 
-        @subscriptions.add @runner.on 'output', (data) => @parser.parse data
+        @subscriptions.add @runner.on 'output', (data) =>
+            @parser.runnerDidProduceOutput data
+            @view.runnerDidProduceOutput data
+
+        @subscriptions.add @runner.on 'error', (data) =>
+            @view.runnerDidProduceError data
 
         @subscriptions.add @runner.on 'stop', (code) =>
-            @parser.flush()
+            @parser.runnerDidStop code
             @notifier.runnerDidStop code
+            @view.runnerDidStop()
+
+        @subscriptions.add @parser.on 'plan', (length) =>
+            @view.testPlanDidStart length
 
         @subscriptions.add @parser.on 'test', (test) =>
-            @notifier.testDidFinish test.status
-            @decorator.addTest test
+            @notifier.testDidFinish test
+            @decorator.testDidFinish test
+            @view.testDidFinish test
 
-        @subscriptions.add @notifier.on 'dismiss', => @show()
+        @subscriptions.add @notifier.on 'dismiss', =>
+            @show()
 
         @subscriptions.add atom.commands.add 'atom-workspace',
-            'atoum-plugin:run-directory': ({ target }) => @runner.start target
-            'atoum-plugin:run-file': ({ target }) => @runner.start target
+            'atoum-plugin:run-directory': ({ target }) => @runItem target
+            'atoum-plugin:run-file': ({ target }) => @runItem target
 
         @subscriptions.add atom.commands.add 'atom-text-editor',
-            'atoum-plugin:run-current-file': => @runner.start atom.workspace.getActiveTextEditor().getPath()
-            'atoum-plugin:run-current-directory': => @runner.start path.dirname atom.workspace.getActiveTextEditor().getPath()
-
-        @subscriptions.add @notifier
+            'atoum-plugin:run-current-file': =>
+                @runner.shouldRunFile atom.workspace.getActiveTextEditor().getPath()
+            'atoum-plugin:run-current-directory': =>
+                @runner.shouldRunDirectory path.dirname atom.workspace.getActiveTextEditor().getPath()
 
         @subscriptions.add @view
+        @subscriptions.add @runner
+        @subscriptions.add @parser
+        @subscriptions.add @notifier
+        @subscriptions.add @decorator
 
     destroy: ->
         @subscriptions.dispose()
@@ -86,6 +103,16 @@ class AtoumPanel
             @hide()
         else
             @show()
+
+    runItem: (item) ->
+        if item instanceof HTMLElement
+            unless $(item).is('span')
+                item = $(item).find 'span'
+
+            item = $(item).attr 'data-path'
+
+        @runner.shouldRunFile(item) unless @runner.shouldRunDirectory(item)
+
 
     serialize: ->
         @view.serialize()

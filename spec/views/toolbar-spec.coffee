@@ -28,38 +28,12 @@ describe 'AtoumToolbarView', ->
             expect(view.viewButton.is('.icon.icon-terminal')).toBe true
 
     describe 'When a runner is set', ->
-        runner = null
-
-        beforeEach ->
-            runner = new Emitter
-            runner.running = false
-
-            view.setRunner runner
-
         it 'should subscribe to start event', ->
-            runner.emit 'start'
+            view.runnerDidStart()
 
             expect(view.startStopButton.is('.icon.icon-circle-slash')).toBe true
 
         it 'should subscribe to stop event', ->
-            runner.emit 'stop'
+            view.runnerDidStop()
 
             expect(view.startStopButton.is('.icon.icon-triangle-right')).toBe true
-
-    describe 'When another runner is set', ->
-        runner = null
-
-        beforeEach ->
-            runner = new Emitter
-            runner.running = false
-
-            view.setRunner runner
-
-        it 'should unsubscribe from runner', ->
-            newRunner = new Emitter
-            newRunner.running = false
-
-            view.setRunner newRunner
-            runner.emit 'start'
-
-            expect(view.startStopButton.is('.icon.icon-circle-slash')).toBe false

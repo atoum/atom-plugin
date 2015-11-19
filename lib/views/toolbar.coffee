@@ -1,40 +1,22 @@
-{ CompositeDisposable, Emitter } = require 'atom'
+{ CompositeDisposable } = require 'atom'
 { View } = require 'atom-space-pen-views'
+AtoumConsoleView = require './console'
+AtoumReportView = require './report'
 
 module.exports =
 class AtoumToolbarView extends View
     @content: ->
-        @div class: 'toolbar', =>
-            @a click: 'startStop', =>
-                @i outlet: 'startStopButton', class: 'icon icon-triangle-right'
-            @a click: 'toggleView', =>
-                @i outlet: 'viewButton', class: 'icon icon-terminal'
+        @div =>
+            @div class: 'toolbar', =>
+                @a click: 'startStop', =>
+                    @i outlet: 'startStopButton', class: 'icon icon-triangle-right'
+                @a click: 'toggleView', =>
+                    @i outlet: 'viewButton', class: 'icon icon-terminal'
+            @subview 'console', new AtoumConsoleView
+            @subview 'report', new AtoumReportView
 
-    initialize: (@model) ->
-        @emitter = new Emitter
+    initialize: (@model, @runner) ->
         @displayView()
-
-    dispose: ->
-        @subscriptions?.dispose()
-        @emitter.dispose()
-
-    on: (event, handler) ->
-        @emitter.on(event, handler)
-
-    setRunner: (@runner) ->
-        @subscriptions?.dispose()
-
-        if @runner.running
-            @runnerDidStart()
-        else
-            @runnerDidStop()
-
-        @subscriptions = new CompositeDisposable
-        @subscriptions.add @runner.on 'start', =>
-            @runnerDidStart()
-
-        @subscriptions.add @runner.on 'stop', =>
-            @runnerDidStop()
 
     startStop: ->
         if @runner?.running
@@ -43,12 +25,24 @@ class AtoumToolbarView extends View
             @runner?.start()
 
     runnerDidStart: ->
+        @console.runnerDidStart()
+        @report.runnerDidStart()
         @startStopButton.addClass 'icon-circle-slash'
         @startStopButton.removeClass 'icon-triangle-right'
 
+    runnerDidProduceOutput: (data) ->
+        @console.runnerDidProduceOutput data
+
+    runnerDidProduceError: (data) ->
+        @console.runnerDidProduceError data
+
     runnerDidStop: ->
+        @console.runnerDidStop()
         @startStopButton.addClass 'icon-triangle-right'
         @startStopButton.removeClass 'icon-circle-slash'
+
+    testDidFinish: (test) ->
+        @report.testDidFinish test
 
     toggleView: ->
         if @model.view is 'console'
@@ -58,11 +52,13 @@ class AtoumToolbarView extends View
 
         @displayView()
 
-        @emitter.emit 'toggle-view', @model.view
-
     displayView: ->
         if @model.view is 'console'
             @viewButton.addClass('icon-list-unordered').removeClass('icon-terminal')
+            @console.css('display', '')
+            @report.hide()
 
         if @model.view is 'report' or not @model.view
             @viewButton.addClass('icon-terminal').removeClass('icon-list-unordered')
+            @report.css('display', '')
+            @console.hide()

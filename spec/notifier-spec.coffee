@@ -44,27 +44,27 @@ describe 'AtoumNotifier', ->
             expect(notifications.addError).not.toHaveBeenCalled()
 
         it 'should not send notification for success', ->
-            notifier.testDidFinish 'ok'
+            notifier.testDidFinish status: 'ok'
 
             notifier.runnerDidStop 0
 
         it 'should not send notification for failure', ->
-            notifier.testDidFinish 'not ok'
+            notifier.testDidFinish status: 'not ok'
 
             notifier.runnerDidStop 1
 
         it 'should not send notification for void', ->
-            notifier.testDidFinish 'void'
+            notifier.testDidFinish status: 'void'
 
             notifier.runnerDidStop 0
 
         it 'should not send notification for skip', ->
-            notifier.testDidFinish 'skip'
+            notifier.testDidFinish status: 'skip'
 
             notifier.runnerDidStop 0
 
         it 'should not send notification for errors', ->
-            notifier.testDidFinish 'success'
+            notifier.testDidFinish status: 'success'
 
             notifier.runnerDidStop 255
 
@@ -73,42 +73,42 @@ describe 'AtoumNotifier', ->
             notifier.enable()
 
         it 'should send notification for success', ->
-            notifier.testDidFinish 'ok'
+            notifier.testDidFinish status: 'ok'
 
             notifier.runnerDidStop 0
 
             expect(notifications.addSuccess).toHaveBeenCalled()
 
         it 'should send notification for failure', ->
-            notifier.testDidFinish 'not ok'
+            notifier.testDidFinish status: 'not ok'
 
             notifier.runnerDidStop 1
 
             expect(notifications.addError).toHaveBeenCalled()
 
         it 'should send notification for void', ->
-            notifier.testDidFinish 'void'
+            notifier.testDidFinish status: 'void'
 
             notifier.runnerDidStop 0
 
             expect(notifications.addWarning).toHaveBeenCalled()
 
         it 'should send notification for skip', ->
-            notifier.testDidFinish 'skip'
+            notifier.testDidFinish status: 'skip'
 
             notifier.runnerDidStop 0
 
             expect(notifications.addWarning).toHaveBeenCalled()
 
         it 'should send notification for errors', ->
-            notifier.testDidFinish 'success'
+            notifier.testDidFinish status: 'success'
 
             notifier.runnerDidStop 255
 
             expect(notifications.addError).toHaveBeenCalled()
 
         it 'should dismiss outdated notification', ->
-            notifier.testDidFinish 'ok'
+            notifier.testDidFinish status: 'ok'
 
             notifier.runnerDidStop 0
 
@@ -119,7 +119,7 @@ describe 'AtoumNotifier', ->
             expect(notification.dismiss).toHaveBeenCalled()
 
         it 'should dismiss outdated notification even if it gets disabled', ->
-            notifier.testDidFinish 'ok'
+            notifier.testDidFinish status: 'ok'
 
             notifier.runnerDidStop 0
 
@@ -132,7 +132,7 @@ describe 'AtoumNotifier', ->
 
         describe 'Success notification', ->
             beforeEach ->
-                notifier.testDidFinish 'ok'
+                notifier.testDidFinish status: 'ok'
 
             afterEach ->
                 notifier.runnerDidStop 0
@@ -158,8 +158,8 @@ describe 'AtoumNotifier', ->
 
         describe 'Failure notification', ->
             beforeEach ->
-                notifier.testDidFinish 'ok'
-                notifier.testDidFinish 'not ok'
+                notifier.testDidFinish status: 'ok'
+                notifier.testDidFinish status: 'not ok'
 
             afterEach ->
                 notifier.runnerDidStop 1
@@ -185,9 +185,9 @@ describe 'AtoumNotifier', ->
 
         describe 'Void and skip notification', ->
             beforeEach ->
-                notifier.testDidFinish 'ok'
-                notifier.testDidFinish 'void'
-                notifier.testDidFinish 'skip'
+                notifier.testDidFinish status: 'ok'
+                notifier.testDidFinish status: 'void'
+                notifier.testDidFinish status: 'skip'
 
             afterEach ->
                 notifier.runnerDidStop 0
@@ -213,10 +213,10 @@ describe 'AtoumNotifier', ->
 
         describe 'Error notification', ->
             beforeEach ->
-                notifier.testDidFinish 'ok'
-                notifier.testDidFinish 'not ok'
-                notifier.testDidFinish 'void'
-                notifier.testDidFinish 'skip'
+                notifier.testDidFinish status: 'ok'
+                notifier.testDidFinish status: 'not ok'
+                notifier.testDidFinish status: 'void'
+                notifier.testDidFinish status: 'skip'
 
             afterEach ->
                 notifier.runnerDidStop 255

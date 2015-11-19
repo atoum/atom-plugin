@@ -6,30 +6,38 @@ class AtoumProgressView extends View
         @div class: 'inline-block pull-right', =>
             @progress outlet: 'bar'
 
+    increment: ->
+        @value++
+
+        @bar.attr 'value', @value
+
     testSuiteStarted: (length) ->
+        @value = 0
+
         @bar
             .attr 'max', length
-            .attr 'value', 0
+            .attr 'value', @value
             .removeClass 'progress-warning'
             .removeClass 'progress-info'
             .removeClass 'progress-error'
 
     testSucceeded: ->
-        @bar.attr 'value', parseInt(@bar.attr('value'), 10) + 1
+        @increment()
 
     testFailed: ->
+        @increment()
+
         @bar
-            .attr 'value', parseInt(@bar.attr('value'), 10) + 1
             .removeClass 'progress-warning'
             .removeClass 'progress-info'
             .addClass 'progress-error'
 
     testHasBeenSkipped: ->
-        @bar
-            .attr 'value', parseInt(@bar.attr('value'), 10) + 1
-            .addClass 'progress-warning' unless @bar.hasClass 'progress-error'
+        @increment()
+
+        @bar.addClass 'progress-warning' unless @bar.hasClass 'progress-error'
 
     testIsVoid: ->
-        @bar
-            .attr 'value', parseInt(@bar.attr('value'), 10) + 1
-            .addClass 'progress-info' unless @bar.hasClass 'progress-error'
+        @increment()
+
+        @bar.addClass 'progress-info' unless @bar.hasClass 'progress-error'

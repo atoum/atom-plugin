@@ -8,18 +8,33 @@ class AtoumRunner extends Emitter
     constructor: (@configurator) ->
         super()
 
-    start: (target = null) ->
-        out = (data) => @emit 'output', data
+    dispose: ->
+        @stop()
 
-        if target instanceof HTMLElement
-            unless $(target).is('span')
-                target = $(target).find 'span'
+    shouldRunDirectory: (directory) ->
+        unless fs.statSync(directory).isDirectory()
+            @emit 'error', directory + 'is not a directory'
+            @didExit 255
 
-            @target = $(target).attr 'data-path'
+            false
         else
-            @target = target if target
+            @target = directory
 
-        return unless @target
+            @start()
+
+    shouldRunFile: (file) ->
+        if fs.statSync(file).isDirectory()
+            @emit 'error', file + 'is a directory'
+            @didExit 255
+
+            false
+        else
+            @target = file
+
+            @start()
+
+    start: ->
+        out = (data) => @emit 'output', data
 
         if fs.statSync(@target).isDirectory()
             cwd = @target
@@ -33,6 +48,8 @@ class AtoumRunner extends Emitter
         if not args
             @emit 'error', 'Could not find atoum binary'
             @didExit 255
+
+            false
         else
             out @config.phpPath + ' \'' + args.join('\' \'') + '\'\n'
             out 'in ' + cwd
@@ -45,6 +62,8 @@ class AtoumRunner extends Emitter
                 stdout: out
                 stderr: (data) => @emit 'error', data
                 exit: (code) => @didExit code
+
+            true
 
     stop: ->
         @process?.kill()

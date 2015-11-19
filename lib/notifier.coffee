@@ -9,7 +9,10 @@ class AtoumNotifier extends Emitter
         @enable()
 
     dispose: ->
-        @subscriptions.dispose()
+        @reset()
+
+    runnerDidStart: ->
+        @reset()
 
     reset: ->
         @count = 0
@@ -27,11 +30,11 @@ class AtoumNotifier extends Emitter
     disable: ->
         @enabled = false
 
-    testDidFinish: (status) ->
+    testDidFinish: (test) ->
         @count += 1
-        @failure += 1 if status is 'not ok'
-        @skip += 1 if status is 'skip'
-        @voidNumber += 1 if status is 'void'
+        @failure += 1 if test.status is 'not ok'
+        @skip += 1 if test.status is 'skip'
+        @voidNumber += 1 if test.status is 'void'
 
     runnerDidStop: (code) ->
         return unless @enabled and (@count > 0 or code > 0)

@@ -18,6 +18,21 @@ class AtoumParser extends Emitter
 
         @reset()
 
+    dispose: ->
+        @flush()
+        super()
+
+    runnerDidStart: ->
+        @reset()
+
+    runnerDidProduceOutput: (data) ->
+        @parse data
+
+    runnerDidStop: (code) ->
+        return if code is 255
+
+        @flush()
+
     reset: ->
         @test = null
 

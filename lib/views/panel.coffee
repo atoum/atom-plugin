@@ -3,8 +3,6 @@ process = require 'child_process'
 { CompositeDisposable } = require 'atom'
 { View } = require 'atom-space-pen-views'
 AtoumToolbarView = require './toolbar'
-AtoumConsoleView = require './console'
-AtoumReportView = require './report'
 AtoumProgressView = require './progress'
 AtoumRunner = require '../runner'
 
@@ -19,44 +17,38 @@ class AtoumPanelView extends View
                 @subview 'progress', new AtoumProgressView
 
             @section class: 'panel-body padded', =>
-                @subview 'toolbar', new AtoumToolbarView(@model)
-                @subview 'console', new AtoumConsoleView
-                @subview 'report', new AtoumReportView
+                @subview 'toolbar', new AtoumToolbarView @model, @runner
 
 
-    initialize: (@model, @runner, @parser) ->
+    initialize: (@model, @runner) ->
         @subscriptions = new CompositeDisposable
-        @toolbar.setRunner @runner
-        @console.setRunner @runner
-        @report.setParser @parser
-        @report.setRunner @runner
-
-        @subscriptions.add @toolbar.on 'toggle-view', (view) =>
-            @model.view = view
-            @toggleView()
-
-        @subscriptions.add @runner.on 'start', =>
-            @progress.hide()
-
-        @subscriptions.add @runner.on 'error', =>
-            @showConsole()
-            @toolbar.displayView()
-
-        @subscriptions.add @parser.on 'plan', (length) =>
-            @progress.testSuiteStarted length
-            @progress.show()
-
-        @subscriptions.add @parser.on 'test', (test) =>
-            @progress.testSucceeded() if test.status is 'ok'
-            @progress.testFailed() if test.status is 'not ok'
-            @progress.testHasBeenSkipped() if test.status is 'skip'
-            @progress.testIsVoid() if test.status is 'void'
-
-        @subscriptions.add @toolbar
-        @subscriptions.add @report
 
     dispose: ->
         @subscriptions.dispose()
+
+    runnerDidStart: ->
+        @progress.hide()
+        @toolbar.runnerDidStart()
+
+    runnerDidProduceOutput: (data) ->
+        @toolbar.runnerDidProduceOutput data
+
+    runnerDidProduceError: (data) ->
+        @toolbar.runnerDidProduceError()
+
+    runnerDidStop: ->
+        @toolbar.runnerDidStop()
+
+    testPlanDidStart: (length) ->
+        @progress.testSuiteStarted length
+        @progress.show()
+
+    testDidFinish: (test) ->
+        @toolbar.testDidFinish test
+        @progress.testSucceeded() if test.status is 'ok'
+        @progress.testFailed() if test.status is 'not ok'
+        @progress.testHasBeenSkipped() if test.status is 'skip'
+        @progress.testIsVoid() if test.status is 'void'
 
     setPanel: (@panel) ->
         @subscriptions.add @panel.onDidChangeVisible (visible) =>
@@ -65,26 +57,6 @@ class AtoumPanelView extends View
 
     didShow: ->
         @progress.hide()
-        @toggleView()
-
-    toggleView: ->
-        if @model.view is 'console'
-            @showConsole()
-
-        if @model.view is 'report' or not @model.view
-            @showReport()
-
-    showConsole: ->
-        @model.view = 'console'
-
-        @console.show()
-        @report.hide()
-
-    showReport: ->
-        @model.view = 'report'
-
-        @console.hide()
-        @report.show()
 
     serialize: ->
         @model
