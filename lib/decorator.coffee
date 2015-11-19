@@ -1,9 +1,14 @@
+{ CompositeDisposable } = require 'atom'
+
 module.exports =
 class AtoumDecorator
     constructor: ->
         @reset()
 
     reset: ->
+        @subscriptions?.dispose()
+
+        @subscriptions = new CompositeDisposable
         @markers = {}
 
     findLineStart: (line) ->
@@ -21,11 +26,16 @@ class AtoumDecorator
     decorate: (editor, file) ->
         return unless @markers[file]
 
-        gutter = editor.addGutter
-            name: 'atoum'
-            priority: 100
+        gutter = editor.gutterWithName 'atoum'
+
+        unless gutter
+            gutter = editor.addGutter
+                name: 'atoum'
+                priority: 100
 
         @markers[file].forEach (test, index) =>
+            return unless test.line
+
             line = editor.lineTextForBufferRow(test.line - 1)
             range = [[test.line - 1, @findLineStart(line)], [test.line - 1, @findLineEnd(line)]]
             marker = editor.markBufferRange range, invalidate: 'touch'

@@ -60,7 +60,7 @@ class AtoumParser extends Emitter
                     if matches
                         if fs.existsSync(matches[1])
                             @test.file = matches[1]
-                            @test.line = matches[2]
+                            @test.line = parseInt(matches[2], 10) if matches[2]
                         else
                             @test.diag += line.replace(/^#\s+/g, '') + '\n'
                     else
