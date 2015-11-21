@@ -20,7 +20,9 @@
   },
   "dependencies": {
     "atom-space-pen-views": "^2.1.0",
-    "glob-fs": "^0.1.6"
+    "glob-fs": "^0.1.6",
+    "os-tmpdir": "^1.0.1",
+    "xml2js": "^0.4.15"
   },
   "devDependencies": {
     "coffeelint": "^1.13.1"

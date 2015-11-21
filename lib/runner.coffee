@@ -56,17 +56,27 @@ class AtoumRunner extends Emitter
 
             false
         else
-            out @config.phpPath + ' \'' + args.join('\' \'') + '\'\n'
-            out 'in ' + cwd
-
-            @process = new BufferedProcess
+            new BufferedProcess
                 command: @config.phpPath
-                args: args
+                args: ['-v']
                 options:
                     cwd: cwd
                 stdout: out
                 stderr: (data) => @emit 'error', data
-                exit: (code) => @didExit code
+                exit: (code) =>
+                    returun unless code is 0
+
+                    out @config.phpPath + ' \'' + args.join('\' \'') + '\'\n'
+                    out 'in ' + cwd
+
+                    @process = new BufferedProcess
+                        command: @config.phpPath
+                        args: args
+                        options:
+                            cwd: cwd
+                        stdout: out
+                        stderr: (data) => @emit 'error', data
+                        exit: (code) => @didExit code
 
             true
 

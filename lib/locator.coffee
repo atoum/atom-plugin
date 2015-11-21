@@ -14,7 +14,13 @@ class AtoumLocator
 
         for dir in @project.getPaths()
             try
-                files = AtoumGlob.readdirSync path.join dir, '**', 'bin', 'atoum'
+                pattern = path.join dir, '**', 'bin', 'atoum'
+
+                unless @config?.disableCodeCoverage
+                    pattern = path.join dir, '**', 'atoum', 'scripts', 'coverage.php'
+
+                AtoumGlob.init()
+                files = AtoumGlob.readdirSync pattern
             catch error
                 files = []
 

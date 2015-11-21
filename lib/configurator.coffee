@@ -1,4 +1,6 @@
 fs = require 'fs'
+path = require 'path'
+tmp = require 'os-tmpdir'
 AtoumConfiguration = require './configuration'
 
 module.exports =
@@ -16,6 +18,7 @@ class AtoumConfigurator
 
         args = args.concat ['-mcn', @config.maxChildrenNumber] if @config?.maxChildrenNumber
         args.push '-ncc' if @config?.disableCodeCoverage
+        args = args.concat ['-o', path.join(tmp(), 'clover.xml')] unless @config?.disableCodeCoverage
         args.push '--debug' if @config?.enableDebugMode
         args = args.concat ['-xc', @config.xdebugConfig] if @config?.xdebugConfig
         args.push '-fivm' if @config?.failIfVoidMethod

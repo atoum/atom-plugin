@@ -8,6 +8,7 @@ AtoumParser = require './parser'
 AtomDecorator = require './decorator'
 AtoumLocator = require './locator'
 AtoumConfigurator = require './configurator'
+AtoumCoverage = require './coverage'
 
 module.exports =
 class AtoumPanel
@@ -24,6 +25,7 @@ class AtoumPanel
         @notifier = new AtoumNotifier atom.notifications
         @view = new AtoumPanelView state, @runner
         @decorator = new AtomDecorator
+        @coverage = new AtoumCoverage
 
         @subscriptions.add @runner.on 'start', =>
             @parser.runnerDidStart()
@@ -42,6 +44,7 @@ class AtoumPanel
             @parser.runnerDidStop code
             @notifier.runnerDidStop code
             @view.runnerDidStop()
+            @coverage.runnerDidStop()
 
         @subscriptions.add @parser.on 'plan', (length) =>
             @view.testPlanDidStart length
@@ -53,6 +56,9 @@ class AtoumPanel
 
         @subscriptions.add @notifier.on 'dismiss', =>
             @show()
+
+        @subscriptions.add @coverage.on 'file', (file) =>
+            @decorator.fileDidCover file
 
         @subscriptions.add atom.commands.add 'atom-workspace',
             'atoum-plugin:run-directory': ({ target }) => @runItem target
@@ -69,6 +75,7 @@ class AtoumPanel
         @subscriptions.add @parser
         @subscriptions.add @notifier
         @subscriptions.add @decorator
+        @subscriptions.add @coverage
 
     destroy: ->
         @subscriptions.dispose()
@@ -80,14 +87,15 @@ class AtoumPanel
             className: 'tool-panel panel-bottom'
         @view.setPanel @panel
 
-        @subscriptions.add atom.workspace.onDidOpen (event) =>
-            @decorator.decorate event.item, event.uri
+        @subscriptions.add workspace.onDidOpen (event) =>
+            @decorator.editorDidOpenFile event.item, event.uri
 
-    configDidChange: (@config) ->
-        @runner.configDidChange @config
-        @configurator.configDidChange @config
-        @locator.configDidChange @config
-        @notifier.configDidChange @config
+    configDidChange: (config) ->
+        @runner.configDidChange config
+        @configurator.configDidChange config
+        @locator.configDidChange config
+        @notifier.configDidChange config
+        @coverage.configDidChange config
 
     show: ->
         unless @panel?.isVisible()

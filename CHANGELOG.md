@@ -1,5 +1,6 @@
 ## 0.4.0
 
+* Report code coverage in editor
 * Handle `failIfVoidMethod` and `failIfSkippedMethod` settings
 * Automatically dismiss outdated notifications
 

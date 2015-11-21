@@ -136,4 +136,34 @@ atom-text-editor::shadow {
             border-bottom: 1px dashed @text-color-error;
         }
     }
+
+    .covered {
+        &.decoration {
+            left: 0;
+            right: 0;
+            display: flex;
+            align-items: flex-end;
+            justify-content: flex-end;
+
+            span {
+                width: 0.5em;
+                background-color: @text-color-success;
+            }
+        }
+    }
+
+    .uncovered {
+        &.decoration {
+            left: 0;
+            right: 0;
+            display: flex;
+            align-items: flex-end;
+            justify-content: flex-end;
+
+            span {
+                width: 0.5em;
+                background-color: @text-color-error;
+            }
+        }
+    }
 }
