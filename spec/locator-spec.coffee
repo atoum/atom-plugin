@@ -15,6 +15,9 @@ describe 'AtoumLocator', ->
                 ['/path/to/project', '/path/to/somewhere/else', '/path/to/nowhere']
         locator = new AtoumLocator pkg, project
 
+    beforeEach ->
+        locator.configDidChange disableCodeCoverage: true
+
     it 'should search atoum binary in project paths', ->
         spyOn(AtoumGlob, 'readdirSync').andCallFake -> []
 

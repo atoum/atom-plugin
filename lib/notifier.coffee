@@ -39,7 +39,7 @@ class AtoumNotifier extends Emitter
     runnerDidStop: (code) ->
         return unless @enabled and (@count > 0 or code > 0)
 
-        if @failure > 0
+        if @failure > 0 and @code is 0
             code = 1
 
         if code is 0
