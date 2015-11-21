@@ -39,6 +39,9 @@ class AtoumNotifier extends Emitter
     runnerDidStop: (code) ->
         return unless @enabled and (@count > 0 or code > 0)
 
+        if @failure > 0
+            code = 1
+
         if code is 0
             if @skip is 0 and @voidNumber is 0
                 @notifySuccess 'Tests passed', @count + ' ' + @pluralize('test' , 'tests', @count) + ' passed!'
@@ -46,7 +49,7 @@ class AtoumNotifier extends Emitter
                 @notifyWarning 'Tests passed', (@count - @voidNumber - @skip) + ' ' + @pluralize('test' , 'tests', @count - @voidNumber - @skip) + ' passed, ' + @voidNumber + ' ' + @pluralize('test' , 'tests', @voidNumber) + ' ' + @pluralize('was', 'were', @voidNumber) + ' void and ' + @skip + ' ' + @pluralize('test' , 'tests', @skip) + ' ' + @pluralize('was' , 'were', @skip) + ' skipped.'
         else if code is 255
             @notifyFailure 'atoum error', 'There was an error while running your tests!'
-        else if (@config?.failIfVoidMethod and @voidNumber isnt 0) or (@config?.failIfSkippedMethod and @skip isnt 0)
+        else if ((@config?.failIfVoidMethod and @voidNumber isnt 0) or (@config?.failIfSkippedMethod and @skip isnt 0)) and @failure is 0
             @notifyFailure 'Tests failed', (@count - @voidNumber - @skip) + ' ' + @pluralize('test' , 'tests', @count - @voidNumber - @skip) + ' passed, ' + @voidNumber + ' ' + @pluralize('test' , 'tests', @voidNumber) + ' ' + @pluralize('was', 'were', @voidNumber) + ' void and ' + @skip + ' ' + @pluralize('test' , 'tests', @skip) + ' ' + @pluralize('was' , 'were', @skip) + ' skipped.'
         else
             @notifyFailure 'Tests failed', @failure + ' of ' + @count + ' ' + @pluralize('test' , 'tests', @count) + ' failed!'

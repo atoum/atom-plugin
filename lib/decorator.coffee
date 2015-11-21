@@ -46,8 +46,8 @@ class AtoumDecorator
 
         unless gutter
             gutter = editor.addGutter
-                name: 'atoum-coverage'
-                priority: 200
+                name: 'atoum'
+                priority: 300
 
         @markers['coverage'][file].lines.forEach ([num, count], index) =>
             line = editor.lineTextForBufferRow(num - 1)
@@ -71,8 +71,8 @@ class AtoumDecorator
 
         unless gutter
             gutter = editor.addGutter
-                name: 'atoum-test'
-                priority: 100
+                name: 'atoum'
+                priority: 300
 
         @markers['test'][file].forEach (test, index) =>
             return unless test.line
