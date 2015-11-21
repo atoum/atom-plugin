@@ -1,3 +1,7 @@
+## 0.5.0
+
+* Snippets for test class, method and common assertions
+
 ## 0.4.0
 
 * Report code coverage in editor

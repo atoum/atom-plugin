@@ -1,0 +1,24 @@
+'.source.php':
+    'atoum test class':
+        'prefix': 'atoumClass'
+        'body': 'namespace ${1:testedClassNamespace}\\\\tests\\\\units;\n\nuse atoum;\n\nclass ${2:testedClassName} extends atoum\n{\n\tpublic function ${3:testMethodName}()\n\t{\n\t\t\$this\n${4:\t\t\t->skip(\'not implemented\')}\n\t\t;\n\t}\n}\n'
+
+    'atoum test method':
+        'prefix': 'atoumMethod'
+        'body': 'public function ${3:testMethodName}()\n{\n\t\$this\n${4:\t\t->skip(\'not implemented\')}\n\t;\n}\n'
+
+    'atoum assertion':
+        'prefix': 'atoumAssert'
+        'body': '->${1:assertType}(${2:\$actual})->${3:assertValue}(${4:\$expected})'
+
+    'atoum exception assertion':
+        'prefix': 'atoumAssertException'
+        'body': '->exception(function() {\n\t${1:throw new \\Exception()};\n})\n\t->isInstanceOf(${2:\\Exception::class})'
+
+    'atoum mock assertion':
+        'prefix': 'atoumAssertMock'
+        'body': '->mock(${1:\$mock})\n\t->call(\'${2:method}\')->withArguments(${3})->once'
+
+    'atoum mock call assertion':
+        'prefix': 'atoumAssertMockCall'
+        'body': '->call(\'${2:method}\')->withArguments(${3})->once'
