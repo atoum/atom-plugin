@@ -112,6 +112,8 @@ class AtoumPanel
 
             item = $(item).attr 'data-path'
 
+        return unless item
+
         @runner.shouldRunFile(item) unless @runner.shouldRunDirectory(item)
 
 

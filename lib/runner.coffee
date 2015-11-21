@@ -12,26 +12,32 @@ class AtoumRunner extends Emitter
         @stop()
 
     shouldRunDirectory: (directory) ->
-        unless fs.statSync(directory).isDirectory()
-            @emit 'error', directory + 'is not a directory'
-            @didExit 255
+        try
+            unless fs.statSync(directory).isDirectory()
+                @emit 'error', directory + 'is not a directory\n'
+                @didExit 255
 
-            false
-        else
-            @target = directory
+                false
+            else
+                @target = directory
 
-            @start()
+                @start()
+        catch
+            @emit 'error', 'Unable to run directory\n'
 
     shouldRunFile: (file) ->
-        if fs.statSync(file).isDirectory()
-            @emit 'error', file + 'is a directory'
-            @didExit 255
+        try
+            if fs.statSync(file).isDirectory()
+                @emit 'error', file + 'is a directory\n'
+                @didExit 255
 
-            false
-        else
-            @target = file
+                false
+            else
+                @target = file
 
-            @start()
+                @start()
+        catch
+            @emit 'error', 'Unable to run file\n'
 
     start: ->
         out = (data) => @emit 'output', data
@@ -45,7 +51,7 @@ class AtoumRunner extends Emitter
         args = @configurator.getArguments @target
 
         if not args
-            @emit 'error', 'Could not find atoum binary'
+            @emit 'error', 'Could not find atoum binary\n'
             @didExit 255
 
             false
