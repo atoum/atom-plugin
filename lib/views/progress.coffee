@@ -11,7 +11,7 @@ class AtoumProgressView extends View
 
         @bar.attr 'value', @value
 
-    testSuiteStarted: (length) ->
+    testSuiteDidStart: (length) ->
         @value = 0
 
         @bar
@@ -21,10 +21,10 @@ class AtoumProgressView extends View
             .removeClass 'progress-info'
             .removeClass 'progress-error'
 
-    testSucceeded: ->
+    testDidSucceed: ->
         @increment()
 
-    testFailed: ->
+    testDidFail: ->
         @increment()
 
         @bar
@@ -32,12 +32,12 @@ class AtoumProgressView extends View
             .removeClass 'progress-info'
             .addClass 'progress-error'
 
-    testHasBeenSkipped: ->
+    testDidSkip: ->
         @increment()
 
         @bar.addClass 'progress-warning' unless @bar.hasClass 'progress-error'
 
-    testIsVoid: ->
+    testDidNothing: ->
         @increment()
 
         @bar.addClass 'progress-info' unless @bar.hasClass 'progress-error'

@@ -15,61 +15,61 @@ describe 'AtoumProgressView', ->
 
     describe 'When test suite starts', ->
         it 'should use plan length as max value', ->
-            view.testSuiteStarted 10
+            view.testSuiteDidStart 10
 
             expect(view.bar.attr('max')).toBe '10'
             expect(view.bar.attr('value')).toBe '0'
 
         it 'should reset progress bar style', ->
-            view.testSuiteStarted 1
-            view.testFailed()
-            view.testSuiteStarted 1
+            view.testSuiteDidStart 1
+            view.testDidFail()
+            view.testSuiteDidStart 1
 
             expect(view.bar.hasClass('progress-error')).toBe false
 
     describe 'When test finishes', ->
         beforeEach ->
-            view.testSuiteStarted 1
+            view.testSuiteDidStart 1
 
         it 'should increment value on success', ->
-            view.testSucceeded()
+            view.testDidSucceed()
 
             expect(view.bar.attr('value')).toBe '1'
 
         it 'should increment value on failure', ->
-            view.testFailed()
+            view.testDidFail()
 
             expect(view.bar.attr('value')).toBe '1'
 
         it 'should add error class', ->
-            view.testFailed()
+            view.testDidFail()
 
             expect(view.bar.hasClass('progress-error')).toBe true
 
         it 'should increment value on skip', ->
-            view.testHasBeenSkipped()
+            view.testDidSkip()
 
             expect(view.bar.attr('value')).toBe '1'
 
         it 'should add warning class', ->
-            view.testHasBeenSkipped()
+            view.testDidSkip()
 
             expect(view.bar.hasClass('progress-warning')).toBe true
 
         it 'should increment value on void', ->
-            view.testIsVoid()
+            view.testDidNothing()
 
             expect(view.bar.attr('value')).toBe '1'
 
         it 'should add info class', ->
-            view.testIsVoid()
+            view.testDidNothing()
 
             expect(view.bar.hasClass('progress-info')).toBe true
 
         it 'should stick with error class', ->
-            view.testFailed()
-            view.testHasBeenSkipped()
-            view.testIsVoid()
+            view.testDidFail()
+            view.testDidSkip()
+            view.testDidNothing()
 
             expect(view.bar.hasClass('progress-error')).toBe true
             expect(view.bar.hasClass('progress-warning')).toBe false

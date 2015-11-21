@@ -41,7 +41,6 @@ class AtoumRunner extends Emitter
         else
             cwd = path.dirname @target
 
-        @running = true
         @emit 'start'
         args = @configurator.getArguments @target
 
@@ -70,7 +69,6 @@ class AtoumRunner extends Emitter
         @didExit()
 
     didExit: (code = -1) ->
-        @running = false
         @emit 'stop', code
 
     configChanged: (@config) ->

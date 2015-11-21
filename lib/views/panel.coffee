@@ -8,7 +8,7 @@ AtoumRunner = require '../runner'
 
 module.exports =
 class AtoumPanelView extends View
-    @content: (@model) ->
+    @content: (@model, @runner) ->
         @div tabIndex: -1, class: 'atoum', =>
             @header class: 'panel-heading', =>
                 @span 'atoum'
@@ -34,7 +34,7 @@ class AtoumPanelView extends View
         @toolbar.runnerDidProduceOutput data
 
     runnerDidProduceError: (data) ->
-        @toolbar.runnerDidProduceError()
+        @toolbar.runnerDidProduceError data
 
     runnerDidStop: ->
         @toolbar.runnerDidStop()
@@ -45,10 +45,10 @@ class AtoumPanelView extends View
 
     testDidFinish: (test) ->
         @toolbar.testDidFinish test
-        @progress.testSucceeded() if test.status is 'ok'
-        @progress.testFailed() if test.status is 'not ok'
-        @progress.testHasBeenSkipped() if test.status is 'skip'
-        @progress.testIsVoid() if test.status is 'void'
+        @progress.testDidSucceed() if test.status is 'ok'
+        @progress.testDidFail() if test.status is 'not ok'
+        @progress.testDidSkip() if test.status is 'skip'
+        @progress.testDidNothing() if test.status is 'void'
 
     setPanel: (@panel) ->
         @subscriptions.add @panel.onDidChangeVisible (visible) =>

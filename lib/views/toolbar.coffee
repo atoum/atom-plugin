@@ -19,12 +19,14 @@ class AtoumToolbarView extends View
         @displayView()
 
     startStop: ->
-        if @runner?.running
+        if @running
             @runner?.stop()
         else
             @runner?.start()
 
     runnerDidStart: ->
+        @running = true
+
         @console.runnerDidStart()
         @report.runnerDidStart()
         @startStopButton.addClass 'icon-circle-slash'
@@ -37,6 +39,8 @@ class AtoumToolbarView extends View
         @console.runnerDidProduceError data
 
     runnerDidStop: ->
+        @running = false
+
         @console.runnerDidStop()
         @startStopButton.addClass 'icon-triangle-right'
         @startStopButton.removeClass 'icon-circle-slash'
