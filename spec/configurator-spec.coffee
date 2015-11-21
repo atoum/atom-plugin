@@ -44,56 +44,56 @@ describe 'AtoumConfigurator', ->
 
     describe 'When a configuration is provided', ->
         it 'should limit child process number', ->
-            configurator.configChanged new AtoumConfiguration
+            configurator.configDidChange new AtoumConfiguration
                 maxChildrenNumber: 4
 
             expect(configurator.getArguments()).toHaveArgumentsInThisOrder '-mcn', 4
 
         it 'should disable code coverage', ->
-            configurator.configChanged new AtoumConfiguration
+            configurator.configDidChange new AtoumConfiguration
                 disableCodeCoverage: true
 
             expect(configurator.getArguments()).toContain '-ncc'
 
         it 'should enable debug mode', ->
-            configurator.configChanged new AtoumConfiguration
+            configurator.configDidChange new AtoumConfiguration
                 enableDebugMode: true
 
             expect(configurator.getArguments()).toContain '--debug'
 
         it 'should set xDebug configuration', ->
-            configurator.configChanged new AtoumConfiguration
+            configurator.configDidChange new AtoumConfiguration
                 xdebugConfig: 'xdebug.config=foobar'
 
             expect(configurator.getArguments()).toHaveArgumentsInThisOrder '-xc', 'xdebug.config=foobar'
 
         it 'should enable failure on void method', ->
-            configurator.configChanged new AtoumConfiguration
+            configurator.configDidChange new AtoumConfiguration
                 failIfVoidMethod: true
 
             expect(configurator.getArguments()).toContain '-fivm'
 
         it 'should enable failure on skipped method', ->
-            configurator.configChanged new AtoumConfiguration
+            configurator.configDidChange new AtoumConfiguration
                 failIfSkippedMethod: true
 
             expect(configurator.getArguments()).toContain '-fism'
 
         it 'should use the provided PHP binary', ->
-            configurator.configChanged new AtoumConfiguration
+            configurator.configDidChange new AtoumConfiguration
                 phpPath: '/path/to/php'
 
             expect(configurator.getArguments()).toHaveArgumentsInThisOrder '-p', '/path/to/php'
 
         it 'should use the provided PHP arguments', ->
-            configurator.configChanged new AtoumConfiguration
+            configurator.configDidChange new AtoumConfiguration
                 phpArguments: '-n -ddate.timezone=Europe/Paris'
 
             expect(configurator.getArguments().slice(0, 2)).toHaveArgumentsInThisOrder '-n', '-ddate.timezone=Europe/Paris'
             expect(configurator.getArguments()).toHaveArgumentsInThisOrder '-p', 'php -n -ddate.timezone=Europe/Paris'
 
         it 'should use the provided PHP binary and arguments', ->
-            configurator.configChanged new AtoumConfiguration
+            configurator.configDidChange new AtoumConfiguration
                 phpPath: '/path/to/php'
                 phpArguments: '-n -ddate.timezone=Europe/Paris'
 

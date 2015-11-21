@@ -71,4 +71,4 @@ class AtoumRunner extends Emitter
     didExit: (code = -1) ->
         @emit 'stop', code
 
-    configChanged: (@config) ->
+    configDidChange: (@config) ->

@@ -40,7 +40,7 @@ class AtoumPanelView extends View
         @toolbar.runnerDidStop()
 
     testPlanDidStart: (length) ->
-        @progress.testSuiteStarted length
+        @progress.testSuiteDidStart length
         @progress.show()
 
     testDidFinish: (test) ->

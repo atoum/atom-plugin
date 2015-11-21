@@ -152,7 +152,7 @@ describe 'AtoumNotifier', ->
 
             it 'should display a message with the number of tests', ->
                 notifications.addSuccess.andCallFake (title, options) ->
-                    expect(options.detail).toBe '1 test(s) passed!'
+                    expect(options.detail).toBe '1 test passed!'
 
                     notification
 
@@ -179,7 +179,7 @@ describe 'AtoumNotifier', ->
 
             it 'should display a message with the number of tests', ->
                 notifications.addError.andCallFake (title, options) ->
-                    expect(options.detail).toBe '1 of 2 test(s) failed!'
+                    expect(options.detail).toBe '1 of 2 tests failed!'
 
                     notification
 
@@ -207,7 +207,7 @@ describe 'AtoumNotifier', ->
 
             it 'should display a message with the number of tests', ->
                 notifications.addWarning.andCallFake (title, options) ->
-                    expect(options.detail).toBe '3 test(s) passed with 1 void test(s) and 1 skipped test(s).'
+                    expect(options.detail).toBe '1 test passed, 1 test was void and 1 test was skipped.'
 
                     notification
 
@@ -236,6 +236,6 @@ describe 'AtoumNotifier', ->
 
             it 'should display a message with the number of tests', ->
                 notifications.addError.andCallFake (title, options) ->
-                    expect(options.detail).toBe 'There was an error when running tests!'
+                    expect(options.detail).toBe 'There was an error while running your tests!'
 
                     notification

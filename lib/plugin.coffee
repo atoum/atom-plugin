@@ -14,7 +14,7 @@ module.exports =
         @panel.addToWorkspace(atom.workspace)
 
         @subscriptions.add atom.config.observe 'atoum-plugin', (value) =>
-            @panel.configChanged new AtoumConfiguration value
+            @panel.configDidChange new AtoumConfiguration value
 
         @subscriptions.add atom.commands.add 'atom-workspace',
             'atoum-plugin:toggle': => @panel.toggle()

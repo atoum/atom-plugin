@@ -5,7 +5,7 @@ module.exports =
 class AtoumLocator
     constructor: (@package, @project) ->
 
-    configChanged: (@config) ->
+    configDidChange: (@config) ->
 
     getBinary: ->
         return path.join @package.path, 'resources', 'atoum.phar' if @package?.path and @config?.usePackagedPhar

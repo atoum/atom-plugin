@@ -36,6 +36,6 @@ describe 'AtoumLocator', ->
 
     describe 'When a configuration is provided', ->
         it 'should use packaged phar', ->
-            locator.configChanged usePackagedPhar: true
+            locator.configDidChange usePackagedPhar: true
 
             expect(locator.getBinary()).toBe path.join(pkg.path, 'resources', 'atoum.phar')

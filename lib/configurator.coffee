@@ -5,7 +5,7 @@ module.exports =
 class AtoumConfigurator
     constructor: (@locator) ->
 
-    configChanged: (@config) ->
+    configDidChange: (@config) ->
 
     getArguments: (target = null) ->
         binary = @locator.getBinary()

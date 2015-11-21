@@ -39,28 +39,42 @@ class AtoumNotifier extends Emitter
     runnerDidStop: (code) ->
         return unless @enabled and (@count > 0 or code > 0)
 
-        if code is 0 and @skip is 0 and @voidNumber is 0
-            @notification = @notifications.addSuccess 'Tests passed',
-                detail: @count + ' test(s) passed!'
-                dismissable: true
-                icon: 'check'
+        if code is 0
+            if @skip is 0 and @voidNumber is 0
+                @notifySuccess 'Tests passed', @count + ' ' + @pluralize('test' , 'tests', @count) + ' passed!'
+            else
+                @notifyWarning 'Tests passed', (@count - @voidNumber - @skip) + ' ' + @pluralize('test' , 'tests', @count - @voidNumber - @skip) + ' passed, ' + @voidNumber + ' ' + @pluralize('test' , 'tests', @voidNumber) + ' ' + @pluralize('was', 'were', @voidNumber) + ' void and ' + @skip + ' ' + @pluralize('test' , 'tests', @skip) + ' ' + @pluralize('was' , 'were', @skip) + ' skipped.'
+        else if code is 255
+            @notifyFailure 'atoum error', 'There was an error while running your tests!'
+        else if (@config?.failIfVoidMethod and @voidNumber isnt 0) or (@config?.failIfSkippedMethod and @skip isnt 0)
+            @notifyFailure 'Tests failed', (@count - @voidNumber - @skip) + ' ' + @pluralize('test' , 'tests', @count - @voidNumber - @skip) + ' passed, ' + @voidNumber + ' ' + @pluralize('test' , 'tests', @voidNumber) + ' ' + @pluralize('was', 'were', @voidNumber) + ' void and ' + @skip + ' ' + @pluralize('test' , 'tests', @skip) + ' ' + @pluralize('was' , 'were', @skip) + ' skipped.'
+        else
+            @notifyFailure 'Tests failed', @failure + ' of ' + @count + ' ' + @pluralize('test' , 'tests', @count) + ' failed!'
 
-        if code is 0 and (@skip isnt 0 or @voidNumber isnt 0)
-            @notification = @notifications.addWarning 'Tests passed',
-                detail: @count + ' test(s) passed with ' + @voidNumber + ' void test(s) and ' + @skip + ' skipped test(s).'
-                dismissable: true
-                icon: 'primitive-dot'
+    configDidChange: (@config) ->
 
-        if code is 255
-            @notification = @notifications.addError 'atoum error',
-                detail: 'There was an error when running tests!'
-                dismissable: true
-                icon: 'flame'
-        else if code > 0
-            @notification = @notifications.addError 'Tests failed',
-                detail: @failure + ' of ' + @count + ' test(s) failed!'
-                dismissable: true
-                icon: 'flame'
+    notifySuccess: (title, message) ->
+        @notification = @notifications.addSuccess title,
+            detail: message
+            dismissable: true
+            icon: 'check'
 
-        if code > 0 or @skip isnt 0 or @voidNumber isnt 0
-            @subscriptions.add @notification.onDidDismiss => @emit 'dismiss', @notification
+    notifyWarning: (title, message) ->
+        @notification = @notifications.addWarning title,
+            detail: message
+            dismissable: true
+            icon: 'primitive-dot'
+
+    notifyFailure: (title, message) ->
+        @notification = @notifications.addError title,
+            detail: message
+            dismissable: true
+            icon: 'flame'
+
+        @subscriptions.add @notification.onDidDismiss => @emit 'dismiss', @notification
+
+    pluralize: (singular, plural, count) ->
+        if count > 0 and count < 2
+            singular
+        else
+            plural

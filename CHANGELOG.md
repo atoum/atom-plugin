@@ -1,5 +1,6 @@
 ## 0.4.0
 
+* Handle `failIfVoidMethod` and `failIfSkippedMethod` settings
 * Automatically dismiss outdated notifications
 
 ## 0.3.0

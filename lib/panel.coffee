@@ -83,10 +83,11 @@ class AtoumPanel
         @subscriptions.add atom.workspace.onDidOpen (event) =>
             @decorator.decorate event.item, event.uri
 
-    configChanged: (@config) ->
-        @runner.configChanged @config
-        @configurator.configChanged @config
-        @locator.configChanged @config
+    configDidChange: (@config) ->
+        @runner.configDidChange @config
+        @configurator.configDidChange @config
+        @locator.configDidChange @config
+        @notifier.configDidChange @config
 
     show: ->
         unless @panel?.isVisible()
