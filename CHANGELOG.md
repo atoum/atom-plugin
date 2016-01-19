@@ -1,5 +1,6 @@
 ## 0.5.0
 
+* Minor bug fix (#4)
 * Snippets for test class, method and common assertions
 
 ## 0.4.0
