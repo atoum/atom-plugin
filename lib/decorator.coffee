@@ -40,7 +40,7 @@ class AtoumDecorator
         @decorateCoverage editor, file
 
     decorateCoverage: (editor, file) ->
-        return unless @markers['coverage'][file]
+        return unless @markers['coverage'] and @markers['coverage'][file]
 
         gutter = editor.gutterWithName 'atoum-coverage'
 
@@ -65,7 +65,7 @@ class AtoumDecorator
                 @markers['coverage'][file].lines.splice index, 1 unless event.isValid
 
     decorateTest: (editor, file) ->
-        return unless @markers['test'][file]
+        return unless @markers['test'] and @markers['test'][file]
 
         gutter = editor.gutterWithName 'atoum-test'
 

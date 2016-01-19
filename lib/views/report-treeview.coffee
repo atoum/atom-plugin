@@ -1,19 +1,11 @@
 { CompositeDisposable } = require 'atom'
 { View, $ } = require 'atom-space-pen-views'
-AtoumReportTreeviewView = require './report-treeview'
+AtoumReportTreeviewBranchView = require './report-treeview-branch'
 
 module.exports =
-class AtoumReportView extends View
+class AtoumReportTreeviewView extends View
     @content: ->
-        @div class: 'report', =>
-            @subview 'treeView', new AtoumReportTreeviewView
-
-            @div =>
-                @ul class: 'background-message centered', =>
-                    @li 'Select a failing test'
-
-                @pre ''
-                @a class: 'padded', ''
+        @ol outlet: 'treeView', class: 'tree-view list-tree has-collapsable-children focusable-panel'
 
     runnerDidStart: ->
         @reset()
@@ -29,32 +21,9 @@ class AtoumReportView extends View
         classId = test.class.replace(/\\/g, '/')
 
         if @treeView.find('[data-class="' + classId + '"]').size() is 0
-            @treeView.append(
-                '<li data-class="' + classId + '" class="entry list-nested-item collapsed">' +
-                    '<div class="header list-item">' +
-                        '<i class="icon ' + icons[test.status] + '"></i>' +
-                        '<span class="name">' + test.class  + '</span>'+
-                    '</div>' +
-                    '<ol class="entries list-tree"></ol>'
-                '</li>'
-            )
+            @treeView.append new AtoumReportTreeviewBranchView test
 
-            @treeView.find('[data-class="' + classId + '"] > .header').on 'click', (event) ->
-                $(event.delegateTarget).parents('li').toggleClass('collapsed').toggleClass('expanded')
-
-        if test.status isnt 'ok' and not @treeView.find('[data-class="' + classId + '"] > .header .icon').hasClass(icons['not ok'])
-            @treeView.find('[data-class="' + classId + '"] > .header .icon')
-                .removeClass(icons['ok'])
-                .removeClass(icons['skip'])
-                .removeClass(icons['void'])
-                .addClass(icons[test.status])
-
-        @treeView.find('[data-class="' + classId + '"] .entries').append(
-            '<li class="entry list-item">' +
-                '<i class="icon ' + icons[test.status] + '"></i>' +
-                '<span class="name">' + test.method + '</span>' +
-            '</li>'
-        )
+        @treeView.find('[data-class="' + classId + '"]').get(0).view().testDidFinish test
 
         if test.status isnt 'ok'
             @treeView.find('[data-class="' + classId + '"] .entries .entry:last').on 'click', (event, elem) =>

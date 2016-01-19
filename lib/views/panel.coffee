@@ -4,7 +4,7 @@ process = require 'child_process'
 { View } = require 'atom-space-pen-views'
 AtoumToolbarView = require './toolbar'
 AtoumProgressView = require './progress'
-AtoumRunner = require '../runner'
+AtoumResultView = require './result'
 
 module.exports =
 class AtoumPanelView extends View
@@ -17,7 +17,8 @@ class AtoumPanelView extends View
                 @subview 'progress', new AtoumProgressView
 
             @section class: 'panel-body padded', =>
-                @subview 'toolbar', new AtoumToolbarView @model, @runner
+                @subview 'toolbar', new AtoumToolbarView @runner,
+                    result: new AtoumResultView @model
 
 
     initialize: (@model, @runner) ->

@@ -42,12 +42,19 @@ class AtoumRunner extends Emitter
     start: ->
         out = (data) => @emit 'output', data
 
+        @emit 'start'
+
+        unless @target
+            @emit 'error', 'Nothing to run. Please select a file or directory to run.\n'
+            @didExit 255
+
+            return false
+
         if fs.statSync(@target).isDirectory()
             cwd = @target
         else
             cwd = path.dirname @target
 
-        @emit 'start'
         args = @configurator.getArguments @target
 
         if not args
@@ -64,19 +71,21 @@ class AtoumRunner extends Emitter
                 stdout: out
                 stderr: (data) => @emit 'error', data
                 exit: (code) =>
-                    returun unless code is 0
+                    unless code is 0
+                        @didExit code
 
-                    out @config.phpPath + ' \'' + args.join('\' \'') + '\'\n'
-                    out 'in ' + cwd
+                    if code is 0
+                        out @config.phpPath + ' \'' + args.join('\' \'') + '\'\n'
+                        out 'in ' + cwd
 
-                    @process = new BufferedProcess
-                        command: @config.phpPath
-                        args: args
-                        options:
-                            cwd: cwd
-                        stdout: out
-                        stderr: (data) => @emit 'error', data
-                        exit: (code) => @didExit code
+                        @process = new BufferedProcess
+                            command: @config.phpPath
+                            args: args
+                            options:
+                                cwd: cwd
+                            stdout: out
+                            stderr: (data) => @emit 'error', data
+                            exit: (code) => @didExit code
 
             true
 

@@ -56,6 +56,12 @@
             a + a {
                 margin-top: @component-padding / 2;
             }
+
+            & + div {
+                display: flex;
+                flex-direction: row;
+                flex: 100 1 16px;
+            }
         }
 
         .console, .report {
