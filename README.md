@@ -1,7 +1,7 @@
 # Atom plugin [![Build Status](https://travis-ci.org/atoum/atom-plugin.svg?branch=master)](https://travis-ci.org/atoum/atom-plugin)
 
 <p align="center">
-    <img src="http://downloads.atoum.org/images/logo.png" alt="atoum"/>
+    <img src="http://atoum.org/images/logo/atoum.png" alt="atoum"/>
     <img src="https://raw.githubusercontent.com/atom/atom/master/resources/app-icons/stable/png/128.png" alt="atom"/>
     <br/><br/>
     <img src="https://raw.githubusercontent.com/atoum/atom-plugin/master/resources/preview.png" alt="atoum-plugin"/>
