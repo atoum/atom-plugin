@@ -1,3 +1,6 @@
 language: objective-c
 
-script: 'curl -s https://raw.githubusercontent.com/atom/ci/master/build-package.sh | sh'
+script:
+- latest_version=$(curl -s https://api.github.com/repos/atoum/atoum/releases/latest | jq '.tag_name' | sed 's/"//g')
+- curl -s https://github.com/atoum/atoum/releases/download/${latest_version}/atoum.phar > resources/atoum.phar
+- curl -s https://raw.githubusercontent.com/atom/ci/master/build-package.sh | sh
