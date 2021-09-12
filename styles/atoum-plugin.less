@@ -121,9 +121,10 @@
     }
 }
 
-atom-text-editor::shadow {
+atom-text-editor {
+  .editor {
     .failing {
-        &.decoration {
+        &.syntax--decoration {
             left: 0;
             right: 0;
             display: flex;
@@ -144,7 +145,7 @@ atom-text-editor::shadow {
     }
 
     .covered {
-        &.decoration {
+        &.syntax--decoration {
             left: 0;
             right: 0;
             display: flex;
@@ -159,7 +160,7 @@ atom-text-editor::shadow {
     }
 
     .uncovered {
-        &.decoration {
+        &.syntax--decoration {
             left: 0;
             right: 0;
             display: flex;
@@ -172,4 +173,5 @@ atom-text-editor::shadow {
             }
         }
     }
+  }
 }
